@@ -16,11 +16,16 @@ export const routes: Routes = [
       path: 'search',
       loadComponent: () => import('./gifs/pages/search-page/search-page'),
     },
+    {
+      path: '**',
+      redirectTo: 'trending',
+    },
+
   ],
 },
 {
   path: '**',
   redirectTo: 'dashboard',
-}
+},
 
 ];
