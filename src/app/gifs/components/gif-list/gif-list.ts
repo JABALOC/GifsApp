@@ -1,6 +1,7 @@
 import { Component, input } from '@angular/core';
 import { GifListItem } from './gif-list-item/gif-list-item';
 import { CommonModule } from '@angular/common';
+import { Gif } from '../../interfaces/gif.interface';
 
 @Component({
   selector: 'app-gif-list',
@@ -9,7 +10,7 @@ import { CommonModule } from '@angular/common';
 })
 export class GifList {
 
-  gift = input.required<string[]>();
+  gift = input.required<Gif[]>();
   // input string[];
 
 }

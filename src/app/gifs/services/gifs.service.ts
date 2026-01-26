@@ -1,23 +1,56 @@
 import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
-import { map, Observable } from "rxjs";
-import { KlipyResponse } from "../interfaces/kiply.interfaces";
+import { inject, Injectable, signal } from "@angular/core";
+import { KiplyResponse, type KlipyResponse } from "../interfaces/kiply.interface";
 import { environment } from "@environments/environment.development";
+import { GifMapper } from "../mapper/gifs.mapper";
+import { Gif } from "../interfaces/gif.interface";
+
 
 @Injectable({ providedIn: 'root' })
 export class GifService {
 
   private http = inject(HttpClient);
 
-  loadTrendingGifs(): Observable<string[]> {
-    return this.http.get<KlipyResponse>(environment.klipyUrl, {
-      headers: {
-        'X-KLIPY-API-KEY': environment.klipyApiKey
+  trendingGifs = signal<Gif[]>([]);
+  trendingGifsLoading = signal(true);
+
+
+
+
+
+  constructor() {
+    this.loadTrendingGifs();
+
+  }
+
+  loadTrendingGifs() {
+
+    this.http.get<KlipyResponse>(environment.klipyUrl, {
+
+    }).subscribe((resp) => {
+      const gifs = GifMapper.mapKlipyItemToArray(resp.data.data);
+      this.trendingGifs.set(gifs);
+      this.trendingGifsLoading.set(false);
+      console.log(gifs);
+    })
+
+  }
+  searchGifs(query: string) {
+
+    this.http.get<KlipyResponse>(environment.klipyUrl, {
+      params: {
+        q: query,
       }
-    }).pipe(
-      map(response =>
-        response.data.data.map(item => item.file.md.gif.url)
-      )
-    );
+
+    }).subscribe((resp) => {
+      const gifs = GifMapper.mapKlipyItemToArray(resp.data.data);
+
+      console.log({ search: gifs });
+    })
+
+
+
   }
 }
+
+
