@@ -10,7 +10,7 @@ import { Gif } from '../../interfaces/gif.interface';
 })
 export class GifList {
 
-  gift = input.required<Gif[]>();
+  gifs = input.required<Gif[]>();
   // input string[];
 
 }
